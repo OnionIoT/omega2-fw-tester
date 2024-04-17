@@ -1,0 +1,19 @@
+[
+    {
+        "test_name": "sanity_test",
+        "commands": [
+            "echo test"
+        ],
+        "expected_response": "test",
+        "timeout": 5
+    },
+    {
+        "test_name": "test_device_status",
+        "commands": [
+            "status",
+            "query"
+        ],
+        "expected_response": "Ready",
+        "timeout": 3
+    }
+]
