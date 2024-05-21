@@ -1,0 +1,19 @@
+[
+    {
+        "test_name": "reboot",
+        "commands": [
+            "reboot",
+            "reset_serial_buffers 60"
+        ],
+        "expected_response": "",
+        "timeout": 5
+    },
+    {
+        "test_name": "boot_sucessfull",
+        "commands": [
+            "echo 'I am alive!'"
+        ],
+        "expected_response": "I am alive!",
+        "timeout": 3
+    }
+]

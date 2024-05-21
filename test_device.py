@@ -9,7 +9,7 @@ def load_test_cases(json_file):
 # Fixture for the device communication, assuming DeviceCommunicator is properly defined elsewhere
 @pytest.fixture
 def device():
-    communicator = DeviceCommunicator('/dev/tty.usbserial-0001', 115200)
+    communicator = DeviceCommunicator('COM4', 115200)
     yield communicator
     communicator.close()
 
@@ -24,6 +24,10 @@ def pytest_generate_tests(metafunc):
 # The test function uses the 'device' fixture and the 'test_case' parameter
 def test_device_responses(test_case, device):
     for command in test_case['commands']:
+        if "reset_serial_buffers" in command:
+            time_s = int(''.join(filter(str.isdigit, command)))
+            device.reset_serial_buffers(time_s)
+            continue
         device.send_command(command)
     response = device.read_until_response(test_case['expected_response'], test_case['timeout'])
     assert test_case['expected_response'] in response, f"Expected '{test_case['expected_response']}' within {test_case['timeout']} seconds"
