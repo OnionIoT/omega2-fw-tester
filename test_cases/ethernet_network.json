@@ -1,0 +1,42 @@
+[
+    {
+        "test_name": "get_wireless_ip",
+        "commands": [
+            "export WIRELESS_IP=$(ifconfig | grep -A1 apcli0 | grep 'inet addr' | cut -d 't' -f2 | cut -d ':' -f2 | cut -d ' ' -f1)"
+        ],
+        "expected_response": "",
+        "timeout": 5
+    },
+    {
+        "test_name": "construct_eth_ip",
+        "commands": [
+            "export WIRELESS_HOST_PART=$(echo ${WIRELESS_IP} | cut -d '.' -f4",
+            "export ETH_HOST_PART=$((${WIRELESS_HOST_PART} + 3))",
+            "export ETH_INTERFACE_ADDR=${WIRELESS_IP/${WIRELESS_HOST_PART}/${ETH_HOST_PART}}"
+        ],
+        "expected_response": "",
+        "timeout": 5
+    },
+    {
+        "test_name": "eth_setup",
+        "commands": [
+            "uci set network.wan.proto='static'",
+            "uci set network.wan.ipaddr='${ETH_INTERFACE_ADDR}'",
+            "uci set network.wan.netmask='255.255.255.0",
+            "uci commit network",
+            "service network restart",
+            "reset_serial_buffers 25"
+        ],
+        "expected_response": "",
+        "timeout": 5
+    },
+    {
+        "test_name": "wireless_check_eth",
+        "commands": [
+            "export ETH_OUTPUT=$(ifconfig | grep -A1 eth0 | grep 'inet addr' | cut -d 't' -f2 | cut -d ':' -f2 | cut -d ' ' -f1)",
+            "[[ $ETH_OUTPUT == $ETH_INTERFACE_ADDR ]] && echo Match found!"
+        ],
+        "expected_response": "Match found!",
+        "timeout": 5
+    }
+]
