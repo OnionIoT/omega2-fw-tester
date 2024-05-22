@@ -1,5 +1,6 @@
 import pytest
 import json
+import os
 from serial_communication import DeviceCommunicator
 
 def load_test_cases(json_file):
@@ -24,10 +25,11 @@ def pytest_generate_tests(metafunc):
 # The test function uses the 'device' fixture and the 'test_case' parameter
 def test_device_responses(test_case, device):
     for command in test_case['commands']:
+        command = command.format(**os.environ)
         if "reset_serial_buffers" in command:
             time_s = int(''.join(filter(str.isdigit, command)))
             device.reset_serial_buffers(time_s)
             continue
         device.send_command(command)
     response = device.read_until_response(test_case['expected_response'], test_case['timeout'])
-    assert test_case['expected_response'] in response, f"Expected '{test_case['expected_response']}' within {test_case['timeout']} seconds"
+    assert test_case['expected_response'] in response, f"Expected '{test_case['expected_response']}' within {test_case['timeout']} seconds\n {test_case['if_failed']}"

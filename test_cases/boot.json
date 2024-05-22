@@ -1,19 +1,11 @@
 [
     {
-        "test_name": "reboot",
+        "test_name": "boot_successful",
         "commands": [
-            "reboot",
-            "reset_serial_buffers 60"
+            "dmesg | grep 'kmodloader: done loading kernel modules from'"
         ],
-        "expected_response": "",
-        "timeout": 5
-    },
-    {
-        "test_name": "boot_sucessfull",
-        "commands": [
-            "echo 'I am alive!'"
-        ],
-        "expected_response": "I am alive!",
-        "timeout": 3
+        "expected_response": "kmodloader: done loading kernel modules from",
+        "timeout": 6,
+        "if_failed": "Power on your Omega device"
     }
 ]

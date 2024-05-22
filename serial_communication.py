@@ -23,7 +23,7 @@ class DeviceCommunicator:
         return received_data  # Return what was received even if it doesn't contain the expected response.
     
     def reset_serial_buffers (self, time_s):
-        """Wait for some time and flush serial console output"""
+        """Wait for some time and reset I/O serial buffer"""
         print(f"> Waiting for {time_s} secs and resetting I/O buffers")
         time.sleep(time_s)
         self.ser.reset_input_buffer()

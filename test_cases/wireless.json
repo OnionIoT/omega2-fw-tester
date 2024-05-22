@@ -1,68 +1,39 @@
 [
     {
-        "test_name": "wireless_clean",
-        "commands": [
-            "export WIRELESS_CONFIGS=$(uci show wireless | cut -d '.' -f2 | cut -d '=' -f1 | sort -u)",
-            "for c in ${WIRELESS_CONFIGS}; do uci delete wireless.$c; done",
-            "uci commit wireless",
-            "service network restart",
-            "reset_serial_buffers 30",
-            "ifconfig | grep -A1 apcli0 | grep 'inet addr' | cut -d 't' -f2 | cut -d ':' -f2 | cut -d ' ' -f1"
-        ],
-        "expected_response": "",
-        "timeout": 5
-    },
-    {
         "test_name": "wireless_setup",
         "commands": [
-            "uci set wireless.radio0=wifi-device",
-            "uci set wireless.radio0.type='mac80211'",
-            "uci set wireless.radio0.path='platform/10300000.wmac'",
-            "uci set wireless.radio0.band='2g'",
-            "uci set wireless.radio0.disabled='0'",
-            "uci set wireless.radio0.channel='auto'",
-            "uci set wireless.radio0.htmode='HT40'",
-            "uci set wireless.default_radio0=wifi-iface",
-            "uci set wireless.default_radio0.device='radio0'",
-            "uci set wireless.default_radio0.mode='ap'",
-            "uci set wireless.default_radio0.ssid='Omega-EE8E'",
-            "uci set wireless.default_radio0.ifname='ra0'",
-            "uci set wireless.default_radio0.network='wlan'",
-            "uci set wireless.default_radio0.encryption='psk2'",
-            "uci set wireless.default_radio0.key='12345678'",
-            "uci set wireless.sta=wifi-iface",
-            "uci set wireless.sta.device='radio0'",
-            "uci set wireless.sta.mode='sta'",
-            "uci set wireless.sta.ifname='apcli0'",
-            "uci set wireless.sta.encryption='psk2'",
-            "uci set wireless.sta.network='wwan'",
-            "uci set wireless.sta.led='omega2p:blue:wifi'",
-            "uci set wireless.sta.disabled='0'",
-            "uci set wireless.sta.key='****'",
-            "uci set wireless.sta.ssid='****'",
+            "uci set wireless.client.disabled='0'",
+            "uci set wireless.client.ssid='{SSID}'",
+            "uci set wireless.client.key='{PASSWORD}'",
             "uci commit wireless",
-            "service network restart",
-            "reset_serial_buffers 30"
+            "service network restart"
         ],
-        "expected_response": "",
-        "timeout": 5
+        "expected_response": "apcli0: associated",
+        "timeout": 30,
+        "if_failed": ""
     },
     {
         "test_name": "wireless_check_sta",
         "commands": [
             "export STA_IP=$(ifconfig | grep -A1 apcli0 | grep 'inet addr' | cut -d 't' -f2 | cut -d ':' -f2 | cut -d ' ' -f1)",
-            "[[ $STA_IP != '' ]] && echo IP found!"
+            "[[ $STA_IP != '' ]] && echo IP found! > result.txt",
+            "reset_serial_buffers 1",
+            "cat result.txt && rm result.txt"
         ],
         "expected_response": "IP found!",
-        "timeout": 5
+        "timeout": 5,
+        "if_failed": "Check your WiFi credentials!"
     },
     {
         "test_name": "wireless_check_ap",
         "commands": [
             "export AP_IP=$(ifconfig | grep -A1 ra0 | grep 'inet addr' | cut -d 't' -f2 | cut -d ':' -f2 | cut -d ' ' -f1)",
-            "[[ $AP_IP != '' ]] && echo IP found!"
+            "[[ $AP_IP != '' ]] && echo IP found! > result.txt",
+            "reset_serial_buffers 1",
+            "cat result.txt && rm result.txt"
         ],
         "expected_response": "IP found!",
-        "timeout": 5
+        "timeout": 5,
+        "if_failed": ""
     }
 ]
