@@ -1,0 +1,24 @@
+[
+    {
+        "test_name": "is_usb_pluged",
+        "commands": [
+            "block info | grep /dev/sd >> dev/null && echo USB found > result.txt",
+            "reset_serial_buffers 1",
+            "cat result.txt && rm result.txt"
+        ],
+        "expected_response": "USB found",
+        "timeout": 2,
+        "if_failed": "Plug in your USB device"
+    },
+    {
+        "test_name": "is_usb_mounted",
+        "commands": [
+            "mount | grep '/dev/sd' >> /dev/null  && echo Mounted > result.txt",
+            "reset_serial_buffers 1",
+            "cat result.txt && rm result.txt"
+        ],
+        "expected_response": "Mounted",
+        "timeout": 2,
+        "if_failed": "Check if the kernel module is instaleed for your USB drive filesystem via 'opkg list-installed'"
+    }
+]

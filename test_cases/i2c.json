@@ -1,0 +1,36 @@
+[
+    {
+        "test_name": "detect_i2c_devices",
+        "commands": [
+            "export I2C_ADDRESS=$(i2cdetect -y 0 | cut -d ':' -f2 | tail -n8 | grep -Eo '[0-9a-fA-F]+')",
+            "[[ $I2C_ADDRESS != '' ]] && echo SUCCESS > result.txt",
+            "reset_serial_buffers 1",
+            "cat result.txt && rm result.txt"
+        ],
+        "expected_response": "SUCCESS",
+        "timeout": 5,
+        "if_failed": "Check if you connected something to I2C bus. See https://docs.onion.io/omega2-docs/communicating-with-i2c-devices.html"
+    },
+    {
+        "test_name": "read_from_i2c_device",
+        "commands": [
+            "i2cget -y 0 0x$I2C_ADDRESS 0x00 && echo SUCCESS > result.txt",
+            "reset_serial_buffers 1",
+            "cat result.txt && rm result.txt"
+        ],
+        "expected_response": "SUCCESS",
+        "timeout": 5,
+        "if_failed": "Check I2C connection"
+    },
+    {
+        "test_name": "write_to_i2c_device",
+        "commands": [
+            "i2cset -y 0 0x$I2C_ADDRESS 0x00 0x01 && echo SUCCESS > result.txt",
+            "reset_serial_buffers 1",
+            "cat result.txt && rm result.txt"
+        ],
+        "expected_response": "SUCCESS",
+        "timeout": 5,
+        "if_failed": "Check I2C connection"
+    }
+]

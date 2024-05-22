@@ -1,0 +1,24 @@
+[
+    {
+        "test_name": "is_sd_card_pluged",
+        "commands": [
+            "block info | grep /dev/mmcblk0p >> dev/null && echo SD card found > result.txt",
+            "reset_serial_buffers 1",
+            "cat result.txt && rm result.txt"
+        ],
+        "expected_response": "SD card found",
+        "timeout": 2,
+        "if_failed": "Plug in your SD card"
+    },
+    {
+        "test_name": "is_sd_card_mounted",
+        "commands": [
+            "mount | grep '/dev/mmcblk0p' >> /dev/null  && echo Mounted > result.txt",
+            "reset_serial_buffers 1",
+            "cat result.txt && rm result.txt"
+        ],
+        "expected_response": "Mounted",
+        "timeout": 2,
+        "if_failed": "Check if the kernel module is instaleed for your SD card filesystem via 'opkg list-installed'"
+    }
+]
