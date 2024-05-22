@@ -4,7 +4,7 @@
         "commands": [
             "export I2C_ADDRESS=$(i2cdetect -y 0 | cut -d ':' -f2 | tail -n8 | grep -Eo '[0-9a-fA-F]+')",
             "[[ $I2C_ADDRESS != '' ]] && echo SUCCESS > result.txt",
-            "reset_serial_buffers 1",
+            "wait_and_reset_serial_buffers 0",
             "cat result.txt && rm result.txt"
         ],
         "expected_response": "SUCCESS",
@@ -15,7 +15,7 @@
         "test_name": "read_from_i2c_device",
         "commands": [
             "i2cget -y 0 0x$I2C_ADDRESS 0x00 && echo SUCCESS > result.txt",
-            "reset_serial_buffers 1",
+            "wait_and_reset_serial_buffers 0",
             "cat result.txt && rm result.txt"
         ],
         "expected_response": "SUCCESS",
@@ -26,7 +26,7 @@
         "test_name": "write_to_i2c_device",
         "commands": [
             "i2cset -y 0 0x$I2C_ADDRESS 0x00 0x01 && echo SUCCESS > result.txt",
-            "reset_serial_buffers 1",
+            "wait_and_reset_serial_buffers 0",
             "cat result.txt && rm result.txt"
         ],
         "expected_response": "SUCCESS",

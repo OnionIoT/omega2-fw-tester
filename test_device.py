@@ -26,9 +26,9 @@ def pytest_generate_tests(metafunc):
 def test_device_responses(test_case, device):
     for command in test_case['commands']:
         command = command.format(**os.environ)
-        if "reset_serial_buffers" in command:
+        if "wait_and_reset_serial_buffers" in command:
             time_s = int(''.join(filter(str.isdigit, command)))
-            device.reset_serial_buffers(time_s)
+            device.wait_and_reset_serial_buffers(time_s)
             continue
         device.send_command(command)
     response = device.read_until_response(test_case['expected_response'], test_case['timeout'])

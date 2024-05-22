@@ -17,7 +17,7 @@
         "commands": [
             "export STA_IP=$(ifconfig | grep -A1 apcli0 | grep 'inet addr' | cut -d 't' -f2 | cut -d ':' -f2 | cut -d ' ' -f1)",
             "[[ $STA_IP != '' ]] && echo IP found! > result.txt",
-            "reset_serial_buffers 1",
+            "wait_and_reset_serial_buffers 0",
             "cat result.txt && rm result.txt"
         ],
         "expected_response": "IP found!",
@@ -29,7 +29,7 @@
         "commands": [
             "export AP_IP=$(ifconfig | grep -A1 ra0 | grep 'inet addr' | cut -d 't' -f2 | cut -d ':' -f2 | cut -d ' ' -f1)",
             "[[ $AP_IP != '' ]] && echo IP found! > result.txt",
-            "reset_serial_buffers 1",
+            "wait_and_reset_serial_buffers 0",
             "cat result.txt && rm result.txt"
         ],
         "expected_response": "IP found!",

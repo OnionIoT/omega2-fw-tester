@@ -3,7 +3,7 @@
         "test_name": "is_sd_card_pluged",
         "commands": [
             "block info | grep /dev/mmcblk0p >> dev/null && echo SD card found > result.txt",
-            "reset_serial_buffers 1",
+            "wait_and_reset_serial_buffers 0",
             "cat result.txt && rm result.txt"
         ],
         "expected_response": "SD card found",
@@ -14,7 +14,7 @@
         "test_name": "is_sd_card_mounted",
         "commands": [
             "mount | grep '/dev/mmcblk0p' >> /dev/null  && echo Mounted > result.txt",
-            "reset_serial_buffers 1",
+            "wait_and_reset_serial_buffers 0",
             "cat result.txt && rm result.txt"
         ],
         "expected_response": "Mounted",

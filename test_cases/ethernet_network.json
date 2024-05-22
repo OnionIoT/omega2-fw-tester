@@ -5,11 +5,11 @@
         "commands": [
             "export ETH_IP=$(ifconfig | grep -A1 eth0 | grep 'inet addr' | cut -d 't' -f2 | cut -d ':' -f2 | cut -d ' ' -f1)",
             "[[ $ETH_IP != '' ]] && echo IP found! > result.txt",
-            "reset_serial_buffers 1",
+            "wait_and_reset_serial_buffers 0",
             "cat result.txt && rm result.txt"
         ],
         "expected_response": "IP found!",
         "timeout": 5,
-        "if_failed": ""
+        "if_failed": "Check if the device connected to Omega supports can be DHCP server, otherwise change Omega network config to use static IP"
     }
 ]
