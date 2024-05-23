@@ -7,7 +7,7 @@
             "echo $RESULT && unset RESULT"
         ],
         "expected_response": "SD card found",
-        "timeout": 2,
+        "timeout": 5,
         "if_failed": "Plug in your SD card"
     },
     {
@@ -18,7 +18,7 @@
             "echo $RESULT && unset RESULT"
         ],
         "expected_response": "Mounted",
-        "timeout": 2,
+        "timeout": 5,
         "if_failed": "Check if the kernel module is instaleed for your SD card filesystem via 'opkg list-installed'"
     }
 ]
