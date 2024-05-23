@@ -10,7 +10,7 @@ def load_test_cases(json_file):
 # Fixture for the device communication, assuming DeviceCommunicator is properly defined elsewhere
 @pytest.fixture
 def device():
-    communicator = DeviceCommunicator('COM4', 115200)
+    communicator = DeviceCommunicator('/dev/tty.usbserial-0001', 115200)
     yield communicator
     communicator.close()
 

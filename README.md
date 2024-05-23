@@ -59,7 +59,8 @@ The tests are defined in a JSON file:
             "COMMAND"
         ],
         "expected_response": "RESPONSE",
-        "timeout": 5 // in seconds
+        "timeout": 5 // in seconds,
+        "if_failed": "Instruction for user"
     },
     ...
 ]
@@ -71,9 +72,18 @@ See `sanity_tests.json` for an example.
 
 To run the tests, use the following command, specifying the JSON configuration file as needed:
 
-
 ```
 pytest -v test_device.py --json-config=<JSON TEST FILE>
+```
+
+Or run all tests from 'test_cases' directory:
+```
+./run_all_tests.sh
+```
+
+Note: variables used in json files (for example wireless_network.json) should be passed as environment variables
+```
+export SSID=<your wifi ssid>
 ```
 
 ## Sample Output
