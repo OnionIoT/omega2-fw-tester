@@ -10,27 +10,28 @@
         ],
         "expected_response": "apcli0: associated",
         "timeout": 30,
-        "if_failed": ""
+        "if_failed": "Check your WiFi credentials!"
     },
     {
         "test_name": "wireless_check_sta",
         "commands": [
+            "wait_and_reset_serial_buffers 15",
             "export STA_IP=$(ifconfig | grep -A1 apcli0 | grep 'inet addr' | cut -d 't' -f2 | cut -d ':' -f2 | cut -d ' ' -f1)",
-            "[[ $STA_IP != '' ]] && echo IP found! > result.txt",
+            "[[ $STA_IP != '' ]] && export RESULT='IP found!'",
             "wait_and_reset_serial_buffers 0",
-            "cat result.txt && rm result.txt"
+            "echo $RESULT && unset RESULT"
         ],
         "expected_response": "IP found!",
         "timeout": 5,
-        "if_failed": "Check your WiFi credentials!"
+        "if_failed": ""
     },
     {
         "test_name": "wireless_check_ap",
         "commands": [
             "export AP_IP=$(ifconfig | grep -A1 ra0 | grep 'inet addr' | cut -d 't' -f2 | cut -d ':' -f2 | cut -d ' ' -f1)",
-            "[[ $AP_IP != '' ]] && echo IP found! > result.txt",
+            "[[ $AP_IP != '' ]] && export RESULT='IP found!'",
             "wait_and_reset_serial_buffers 0",
-            "cat result.txt && rm result.txt"
+            "echo $RESULT && unset RESULT"
         ],
         "expected_response": "IP found!",
         "timeout": 5,

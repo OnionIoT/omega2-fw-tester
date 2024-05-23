@@ -2,9 +2,9 @@
     {
         "test_name": "is_usb_pluged",
         "commands": [
-            "block info | grep /dev/sd >> dev/null && echo USB found > result.txt",
+            "block info | grep /dev/sd >> dev/null && export RESULT='USB found'",
             "wait_and_reset_serial_buffers 0",
-            "cat result.txt && rm result.txt"
+            "echo $RESULT && unset RESULT"
         ],
         "expected_response": "USB found",
         "timeout": 2,
@@ -13,9 +13,9 @@
     {
         "test_name": "is_usb_mounted",
         "commands": [
-            "mount | grep '/dev/sd' >> /dev/null  && echo Mounted > result.txt",
+            "mount | grep '/dev/sd' >> /dev/null  && export RESULT='Mounted'",
             "wait_and_reset_serial_buffers 0",
-            "cat result.txt && rm result.txt"
+            "echo $RESULT && unset RESULT"
         ],
         "expected_response": "Mounted",
         "timeout": 2,
