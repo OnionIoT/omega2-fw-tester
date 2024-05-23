@@ -3,8 +3,8 @@
         "test_name": "wireless_setup",
         "commands": [
             "uci set wireless.client.disabled='0'",
-            "uci set wireless.client.ssid='{SSID}'",
-            "uci set wireless.client.key='{PASSWORD}'",
+            "uci set wireless.client.ssid='{WIFI_SSID}'",
+            "uci set wireless.client.key='{WIFI_PASSWORD}'",
             "uci commit wireless",
             "service network restart"
         ],

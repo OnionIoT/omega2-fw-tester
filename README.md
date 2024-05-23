@@ -83,7 +83,8 @@ Or run all tests from 'test_cases' directory:
 
 Note: variables used in json files (for example wireless_network.json) should be passed as environment variables
 ```
-export SSID=<your wifi ssid>
+export WIFI_SSID=<your wifi ssid>
+export WIFI_PASSWORD=<your wifi ssid>
 ```
 
 ## Sample Output
