@@ -2,9 +2,9 @@
     {
         "test_name": "boot_successful",
         "commands": [
-            "dmesg | grep 'kmodloader: done loading kernel modules from'"
+            "dmesg | grep 'random: crng init done'"
         ],
-        "expected_response": "kmodloader: done loading kernel modules from",
+        "expected_response": "random: crng init done",
         "timeout": 6,
         "if_failed": "Power on your Omega device"
     }
