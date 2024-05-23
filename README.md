@@ -81,10 +81,10 @@ Or run all tests from 'test_cases' directory:
 ./run_all_tests.sh
 ```
 
-Note: variables used in json files (for example wireless_network.json) should be passed as environment variables
+Note: variables used in json files (for example wireless_network.json) should be passed as environment variables:
 ```
 export WIFI_SSID=<your wifi ssid>
-export WIFI_PASSWORD=<your wifi ssid>
+export WIFI_PASSWORD=<your wifi password>
 ```
 
 ## Sample Output
