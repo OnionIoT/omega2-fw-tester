@@ -1,0 +1,14 @@
+[
+    {
+        "test_name": "detect_i2c_devices",
+        "commands": [
+            "export I2C_ADDRESS=$(i2cdetect -y 0 | cut -d ':' -f2 | tail -n8 | grep -Eo '[0-9a-fA-F]+')",
+            "[[ $I2C_ADDRESS != '' ]] && export RESULT='Success'",
+            "wait_and_reset_serial_buffers 0",
+            "echo $RESULT && unset RESULT"
+        ],
+        "expected_response": "Success",
+        "timeout": 5,
+        "if_failed": "Check if you connected something to the I2C bus. See https://docs.onion.io/omega2-docs/communicating-with-i2c-devices.html"
+    }
+]

@@ -1,0 +1,46 @@
+[
+    {
+        "test_name": "initialize_gpio",
+        "commands": [
+            "export GPIO_BASE=$(cat /sys/class/gpio/gpiochip*/base | sort -r | head -n1)",
+            "echo $GPIO_BASE > /sys/class/gpio/export",
+            "echo 'out' > /sys/class/gpio/gpio$GPIO_BASE/direction",
+            "wait_and_reset_serial_buffers 0",
+            "cat /sys/class/gpio/gpio$GPIO_BASE/direction"
+        ],
+        "expected_response": "out",
+        "timeout": 5,
+        "if_failed": "Check GPIO mapping with 'gpio-lookup' command (https://documentation.onioniot.com/hardware-interfaces/gpio)"
+    },
+    {
+        "test_name": "set_gpio_low",
+        "commands": [
+            "echo 0 > /sys/class/gpio/gpio$GPIO_BASE/value",
+            "wait_and_reset_serial_buffers 0",
+            "cat /sys/class/gpio/gpio$GPIO_BASE/value"
+        ],
+        "expected_response": "0",
+        "timeout": 5,
+        "if_failed": ""
+    },
+    {
+        "test_name": "set_gpio_high",
+        "commands": [
+            "echo 1 > /sys/class/gpio/gpio$GPIO_BASE/value",
+            "wait_and_reset_serial_buffers 0",
+            "cat /sys/class/gpio/gpio$GPIO_BASE/value"
+        ],
+        "expected_response": "1",
+        "timeout": 5,
+        "if_failed": ""
+    },
+    {
+        "test_name": "close_gpio",
+        "commands": [
+            "echo $GPIO_BASE > /sys/class/gpio/unexport"
+        ],
+        "expected_response": "",
+        "timeout": 5,
+        "if_failed": ""
+    }
+]

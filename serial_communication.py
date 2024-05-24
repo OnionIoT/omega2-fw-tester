@@ -21,6 +21,16 @@ class DeviceCommunicator:
                 if expected_response in received_data:
                     return received_data
         return received_data  # Return what was received even if it doesn't contain the expected response.
+    
+    def wait_and_reset_serial_buffers (self, time_s):
+        """Wait for some time and reset I/O serial buffer"""
+        print(f"> Waiting for {time_s} secs and resetting I/O buffers")
+        if time_s > 0:
+            time.sleep(time_s)
+        else:
+            time.sleep(1)   #Need to wait at least 1 sec before resetting the buffers, otherwise tests will fail.
+        self.ser.reset_input_buffer()
+        self.ser.reset_output_buffer()
 
     def close(self):
         """Close the serial connection."""
