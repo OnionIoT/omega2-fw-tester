@@ -10,15 +10,23 @@ def load_test_cases(json_file):
 # Fixture for the device communication, assuming DeviceCommunicator is properly defined elsewhere
 @pytest.fixture
 def device():
-    communicator = DeviceCommunicator('/dev/tty.usbserial-0001', 115200)
+    communicator = DeviceCommunicator('COM4', 115200)
     yield communicator
     communicator.close()
 
 # Use pytest to dynamically load test cases based on the command-line argument
 def pytest_generate_tests(metafunc):
     # This function is called once for each test function found in the test module
-    if "test_case" in metafunc.fixturenames:  # Check if 'test_case' is used in the test
-        json_config = metafunc.config.getoption("--json-config")  # Get the JSON config file path
+    if metafunc.config.getoption("--run-all"):
+        json_files = [os.path.join('test_cases', file) for file in os.listdir('test_cases') if file.endswith('.json')]
+        test_cases_list = []
+        for json_config in json_files:
+            test_cases = load_test_cases(json_config)  # Load test cases from the JSON file
+            test_cases_list += test_cases
+        metafunc.parametrize("test_case", test_cases_list, ids=[f"{i}_{case['test_name']}" for case, i in zip(test_cases_list, range(len(test_cases_list)))])
+    
+    elif metafunc.config.getoption("--json-config"):
+        json_config = metafunc.config.getoption("--json-config")
         test_cases = load_test_cases(json_config)  # Load test cases from the JSON file
         metafunc.parametrize("test_case", test_cases, ids=[case['test_name'] for case in test_cases])
 
