@@ -13,24 +13,26 @@ def load_test_cases(json_files):
 # Fixture for the device communication, assuming DeviceCommunicator is properly defined elsewhere
 @pytest.fixture
 def device():
-    communicator = DeviceCommunicator('/dev/tty.usbserial-0001', 115200)
+    communicator = DeviceCommunicator('COM4', 115200)
     yield communicator
     communicator.close()
 
 # Use pytest to dynamically load test cases based on the command-line argument
 def pytest_generate_tests(metafunc):
     # This function is called once for each test function found in the test module
-    if metafunc.config.getoption("--run-all"):
-        json_files = [os.path.join('test_cases', file) for file in os.listdir('test_cases') if file.endswith('.json')]    
-    elif metafunc.config.getoption("--json-config"):
-        json_files = metafunc.config.getoption("--json-config")
-    
-    test_cases_list = []
-    for json_config in json_files:
-        test_cases = load_test_cases(json_config)  # Load test cases from the JSON file
-        test_cases_list += test_cases
-    # Pretty print to have test case name with its number at the beginning. This also prevents wrong test execution in alphabetical order
-    metafunc.parametrize("test_case", test_cases_list, ids=[f"{i}_{case['test_name']}" for case, i in zip(test_cases_list, range(len(test_cases_list)))])
+    print(metafunc.fixturenames)
+    if "test_case" in metafunc.fixturenames:
+        if metafunc.config.getoption("--run-all"):
+            json_files = [os.path.join('test_cases', file) for file in os.listdir('test_cases') if file.endswith('.json')]    
+        elif metafunc.config.getoption("--json-config"):
+            json_files = metafunc.config.getoption("--json-config")
+        
+        test_cases_list = []
+        for json_config in json_files:
+            test_cases = load_test_cases(json_config)  # Load test cases from the JSON file
+            test_cases_list += test_cases
+        # Pretty print to have test case name with its number at the beginning. This also prevents wrong test execution in alphabetical order
+        metafunc.parametrize("test_case", test_cases_list, ids=[f"{index}_{case['test_name']}" for case, index in zip(test_cases_list, range(len(test_cases_list)))])
 
 # The test function uses the 'device' fixture and the 'test_case' parameter
 def test_device_responses(test_case, device):
