@@ -7,7 +7,10 @@ def load_test_cases(json_files):
     tests = []
     for json_file in json_files.split(" "):
         with open(json_file, 'r') as file:
-            tests+=json.load(file)
+            test_cases = json.load(file)
+            for test_case in test_cases:
+                test_case['json_file_path'] = os.path.basename(json_file)
+            tests+=test_cases
     return tests
 
 # Fixture for the device communication, assuming DeviceCommunicator is properly defined elsewhere
@@ -31,8 +34,13 @@ def pytest_generate_tests(metafunc):
         for json_config in json_files:
             test_cases = load_test_cases(json_config)  # Load test cases from the JSON file
             test_cases_list += test_cases
-        # Pretty print to have test case name with its number at the beginning. This also prevents wrong test execution in alphabetical order
-        metafunc.parametrize("test_case", test_cases_list, ids=[f"{index}_{case['test_name']}" for case, index in zip(test_cases_list, range(len(test_cases_list)))])
+        # Pretty print to have test case name with its number and file name at the beginning. 
+        # This also prevents wrong test execution in alphabetical order
+        metafunc.parametrize("test_case", test_cases_list, ids=[
+            f"{index}-{case['json_file_path']}:{case['test_name']}"
+            for index, case
+            in enumerate(test_cases_list)
+        ])
 
 # The test function uses the 'device' fixture and the 'test_case' parameter
 def test_device_responses(test_case, device):
