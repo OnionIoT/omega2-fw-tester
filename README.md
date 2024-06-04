@@ -45,7 +45,7 @@ The default port is `/dev/tty.usbserial-0001`. This can be changed in the `test_
 
 ## Test Configuration
 
-Currently, only simple tests are supported where:
+There are several tests covering basic functionality. Working principle is simple:
 - The Testing Device sends a command(s) to the DUT over serial terminal
 - The Testing Device reads responses from the DUT and compares them against expected output (within a timeout)
 
@@ -68,23 +68,30 @@ The tests are defined in a JSON file:
 
 See `sanity_tests.json` for an example.
 
+## Preparation before running the Tests
+
+To verify all basic Omega2 functionality you need to prepare physical env:
+- Connect your Omega2 device via USB serial
+- Plug **SD card** in to verify SD card related functionality
+- Plug **USB device** in to verify USB related functionality
+- Connect an **I2C device** to verify I2C related functionality
+- Power on your Omega2 device 
+
+Also prepare your system environment:
+- Set `WIFI_SSID` environmental variable with value of you Wi-Fi network ssid
+- Set `WIFI_PASSWORD` environmental variable with value of you Wi-Fi network password
+
 ## Running the Tests
 
 To run the tests, use the following command, specifying the JSON configuration file as needed:
 
 ```
-pytest -v test_device.py --json-config=<JSON TEST FILE>
+pytest -v test_device.py --json-config <JSON TEST FILE1> <JSON TEST FILE2> ...
 ```
 
 Or run all tests from 'test_cases' directory:
 ```
-./run_all_tests.sh
-```
-
-Note: variables used in json files (for example wireless_network.json) should be passed as environment variables:
-```
-export WIFI_SSID=<your wifi ssid>
-export WIFI_PASSWORD=<your wifi password>
+pytest -v test_device.py --run-all
 ```
 
 ## Sample Output
@@ -118,7 +125,6 @@ test_case = {'commands': ['status', 'query'], 'expected_response': 'Ready', 'tes
         response = device.read_until_response(test_case['expected_response'], test_case['timeout'])
 >       assert test_case['expected_response'] in response, f"Expected '{test_case['expected_response']}' within {test_case['timeout']} seconds"
 E       AssertionError: Expected 'Ready' within 3 seconds
-E       assert 'Ready' in 'status\r\n/bin/ash: status: not found\r\nroot@Omega-665D:/# query\r\n/bin/ash: query: not found\r\nroot@Omega-665D:/# '
 
 test_device.py:29: AssertionError
 ------------------------------------------------------------------------------------------ Captured stdout setup -------------------------------------------------------------------------------------------
