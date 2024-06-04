@@ -78,8 +78,10 @@ To verify all basic Omega2 functionality you need to prepare physical env:
 - Power on your Omega2 device 
 
 Also prepare your system environment:
-- Set `WIFI_SSID` environmental variable with value of you Wi-Fi network ssid
-- Set `WIFI_PASSWORD` environmental variable with value of you Wi-Fi network password
+- Set `WIFI_SSID` environmental variable with value of you Wi-Fi network ssid:
+  - `export WIFI_SSID=<your wifi ssid>`
+- Set `WIFI_PASSWORD` environmental variable with value of you Wi-Fi network password:
+  - `export WIFI_PASSWORD=<your wifi password>`
 
 ## Running the Tests
 
