@@ -16,7 +16,7 @@ def load_test_cases(json_files):
 # Fixture for the device communication, assuming DeviceCommunicator is properly defined elsewhere
 @pytest.fixture
 def device():
-    communicator = DeviceCommunicator('COM4', 115200)
+    communicator = DeviceCommunicator('/dev/tty.usbserial-0001', 115200)
     yield communicator
     communicator.close()
 
@@ -52,4 +52,4 @@ def test_device_responses(test_case, device):
             continue
         device.send_command(command)
     response = device.read_until_response(test_case['expected_response'], test_case['timeout'])
-    assert test_case['expected_response'] in response, pytest.fail(f"Expected '{test_case['expected_response']}' within {test_case['timeout']} seconds\n {test_case['if_failed']}")
+    assert test_case['expected_response'] in response, f"Expected '{test_case['expected_response']}' within {test_case['timeout']} seconds\n {test_case['if_failed']}"
