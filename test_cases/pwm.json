@@ -1,0 +1,48 @@
+[
+    {
+        "test_name": "opkg_install_dependencies",
+        "commands": [
+            "opkg update",
+            "[[ -z $(opkg install kmod-pwm-mediatek-ramips | grep -q 'installed in root is up to date') ]] && export RESULT='Installed' || export RESULT='Failed'",
+            "[[ -z $(opkg install omega2-script | grep -q 'installed in root is up to date') ]] || RESULT='Failed'",
+            "wait_and_reset_serial_buffers 0",
+            "echo $RESULT && unset RESULT"
+        ],
+        "expected_response": "Installed",
+        "timeout": 60,
+        "if_failed": "https://documentation.onioniot.com/hardware-interfaces/pwm"
+    },
+    {
+        "test_name": "adjust_pin_multiplexing",
+        "commands": [
+            "omega2-ctrl gpiomux set pwm0 pwm",
+            "wait_and_reset_serial_buffers 5",
+            "echo $?"
+        ],
+        "expected_response": "0",
+        "timeout": 5,
+        "if_failed": ""
+    },
+    {
+        "test_name": "generate_pwm_signal",
+        "commands": [
+            "onion pwm 0 50 123456",
+            "wait_and_reset_serial_buffers 5",
+            "echo $?"
+        ],
+        "expected_response": "0",
+        "timeout": 5,
+        "if_failed": ""
+    },
+    {
+        "test_name": "stop_pwm_signal",
+        "commands": [
+            "onion pwm 0 disable",
+            "wait_and_reset_serial_buffers 0",
+            "echo $?"
+        ],
+        "expected_response": "0",
+        "timeout": 5,
+        "if_failed": ""
+    }
+]

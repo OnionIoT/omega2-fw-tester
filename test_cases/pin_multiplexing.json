@@ -1,0 +1,43 @@
+[
+    {
+        "test_name": "get_current_multiplexing_config",
+        "commands": [
+            "export GPIOMUX_GET=$(omega2-ctrl gpiomux get 2>&1 | grep 'uart1 - \\[uart\\] gpio')",
+            "[[ \"$(echo \"$GPIOMUX_GET\")\" != '' ]] && export RESULT='Success'",
+            "wait_and_reset_serial_buffers 0",
+            "echo $RESULT && unset RESULT",
+            "unset GPIOMUX_GET"
+        ],
+        "expected_response": "Success",
+        "timeout": 5,
+        "if_failed": "See https://documentation.onioniot.com/hardware-interfaces/pin-multiplexing/"
+    },
+    {
+        "test_name": "change_and_verify_pin_function",
+        "commands": [
+            "omega2-ctrl gpiomux set uart1 gpio",
+            "export GPIOMUX_GET=$(omega2-ctrl gpiomux get 2>&1 | grep 'uart1 - uart \\[gpio\\]')",
+            "[[ \"$(echo \"$GPIOMUX_GET\")\" != '' ]] && export RESULT='Success'",
+            "wait_and_reset_serial_buffers 0",
+            "echo $RESULT && unset RESULT",
+            "unset GPIOMUX_GET"
+        ],
+        "expected_response": "Success",
+        "timeout": 5,
+        "if_failed": ""
+    },
+    {
+        "test_name": "clean_up",
+        "commands": [
+            "omega2-ctrl gpiomux set uart1 uart",
+            "export GPIOMUX_GET=$(omega2-ctrl gpiomux get 2>&1 | grep 'uart1 - \\[uart\\] gpio')",
+            "[[ \"$(echo \"$GPIOMUX_GET\")\" != '' ]] && export RESULT='Success'",
+            "wait_and_reset_serial_buffers 0",
+            "echo $RESULT && unset RESULT",
+            "unset GPIOMUX_GET"
+        ],
+        "expected_response": "Success",
+        "timeout": 5,
+        "if_failed": ""
+    }
+]
