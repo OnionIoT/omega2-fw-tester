@@ -75,6 +75,7 @@ To verify all basic Omega2 functionality you need to prepare physical env:
 - Plug **SD card** in to verify SD card related functionality
 - Plug **USB device** in to verify USB related functionality
 - Connect an **I2C device** to verify I2C related functionality
+- Connect to a DHCP-enabled wired network through the **Ethernet Port**
 - Power on your Omega2 device 
 
 Also prepare your system environment:
