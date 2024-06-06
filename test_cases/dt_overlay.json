@@ -1,0 +1,67 @@
+[
+    {
+        "test_name": "opkg_install_dependencies_sw_spi",
+        "commands": [
+            "opkg update",
+            "[[ -z $(opkg list-installed | grep -q 'onion-dt-overlay-sw-spi') ]] && export RESULT='Installed'|| export RESULT1='Not found'",
+            "[[ $RESULT=='Not found' ]] && [[ -z $(opkg install onion-dt-overlay-sw-spi | grep -q 'Configuring onion-dt-overlay-sw-spi') ]] && RESULT='Installed'",
+            "wait_and_reset_serial_buffers 0",
+            "echo $RESULT && unset RESULT"
+        ],
+        "expected_response": "Installed",
+        "timeout": 60,
+        "if_failed": "Check if needed kernel modules are installed (kmod-mmc-spi, kmod-spi-bitbang, kmod-spi-dev, kmod-spi-gpio) with 'opkg list-installed' command. \nAlso see https://documentation.onioniot.com/device-tree-overlay/intro."
+    },
+    {
+        "test_name": "opkg_install_dependencies_w1_gpio",
+        "commands": [
+            "[[ -z $(opkg list-installed | grep -q 'onion-dt-overlay-w1-gpio') ]] && export RESULT='Installed'|| export RESULT='Not found'",
+            "[[ $RESULT2=='Not found' ]] && [[ -z $(opkg install onion-dt-overlay-w1-gpio | grep -q 'Configuring onion-dt-overlay-w1-gpio') ]] && RESULT='Installed'",
+            "wait_and_reset_serial_buffers 0",
+            "echo $RESULT && unset RESULT"
+        ],
+        "expected_response": "Installed",
+        "timeout": 30,
+        "if_failed": "Check if needed kernel modules are installed (kmod-w1, kmod-w1-master-gpio, kmod-w1-slave-therm) with 'opkg list-installed' command. \nAlso see https://documentation.onioniot.com/device-tree-overlay/intro."
+    },
+    {
+        "test_name": "check_sw_spi_dt_overlay_status",
+        "commands": [
+            "wait_and_reset_serial_buffers 0",
+            "cat /sys/kernel/config/device-tree/overlays/sw-spi/status"
+        ],
+        "expected_response": "applied",
+        "timeout": 5,
+        "if_failed": "1. Check if '/lib/firmware/device-tree/overlays/sw-spi.dtbo' exists.\n2. Check if configfs is mounted 'mount | grep configfs'.\n3.Reboot the device."
+    },
+    {
+        "test_name": "check_if_sw_spi_works",
+        "commands": [
+            "wait_and_reset_serial_buffers 0",
+            "ls /dev"
+        ],
+        "expected_response": "spidev1.0",
+        "timeout": 5,
+        "if_failed": "Double check kernel modules kmod-mmc-spi, kmod-spi-bitbang, kmod-spi-dev, kmod-spi-gpio with 'opkg list-installed' command."
+    },
+    {
+        "test_name": "check_w1_gpio_dt_overlay_status",
+        "commands": [
+            "wait_and_reset_serial_buffers 0",
+            "cat /sys/kernel/config/device-tree/overlays/w1-gpio/status"
+        ],
+        "expected_response": "applied",
+        "timeout": 5,
+        "if_failed": "1. Check if '/lib/firmware/device-tree/overlays/w1-gpio.dtbo' exists.\n2. Check if configfs is mounted 'mount | grep configfs'.\n3.Reboot the device."
+    },
+    {
+        "test_name": "check_if_w1_gpio_works",
+        "commands": [
+            "wait_and_reset_serial_buffers 0",
+            "ls /sys/devices"
+        ],
+        "expected_response": "w1_bus_master1",
+        "timeout": 5,
+        "if_failed": "Double check kernel modules kmod-w1, kmod-w1-master-gpio, kmod-w1-slave-therm presence with 'opkg list-installed' command."
+    }
+]
