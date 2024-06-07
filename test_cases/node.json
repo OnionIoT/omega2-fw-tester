@@ -1,15 +1,25 @@
 [
     {
-        "test_name": "opkg_install_dependencies",
+        "test_name": "opkg_update",
         "commands": [
-            "opkg update",
-            "[[ -z $(opkg list-installed | grep -qw 'node') ]] && export RESULT='Installed'|| export RESULT1='Not found'",
-            "[[ $RESULT=='Not found' ]] && [[ -z $(opkg install node | grep -q 'Configuring node') ]] && RESULT='Installed'",
+            "opkg update && export RESULT='Update completed'",
             "wait_and_reset_serial_buffers 0",
             "echo $RESULT && unset RESULT"
         ],
-        "expected_response": "Installed",
-        "timeout": 60,
+        "expected_response": "Update completed",
+        "timeout": 120,
+        "if_failed": "Check your Internet connection"
+    },
+    {
+        "test_name": "opkg_install_dependencies",
+        "commands": [
+            "[[ -z $(opkg list-installed | grep -qw 'node') ]] && export RESULT='The package has been installed'|| export RESULT1='Not found'",
+            "[[ $RESULT=='Not found' ]] && [[ -z $(opkg install node | grep -q 'Configuring node') ]] && RESULT='The package has been installed'",
+            "wait_and_reset_serial_buffers 0",
+            "echo $RESULT && unset RESULT"
+        ],
+        "expected_response": "The package has been installed",
+        "timeout": 240,
         "if_failed": "https://documentation.onioniot.com/software/node"
     },
     {

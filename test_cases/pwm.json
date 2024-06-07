@@ -1,19 +1,37 @@
 [
     {
-        "test_name": "opkg_install_dependencies",
+        "test_name": "opkg_update",
         "commands": [
-            "opkg update",
-            "wait_and_reset_serial_buffers 0",
-            "[[ -z $(opkg list-installed | grep -q 'kmod-pwm-mediatek-ramips') ]] && export RESULT='Installed'|| export RESULT1='Not found'",
-            "[[ $RESULT=='Not found' ]] && [[ -z $(opkg install kmod-pwm-mediatek-ramips | grep -q 'Configuring kmod-pwm-mediatek-ramips') ]] && RESULT='Installed'",
-            "wait_and_reset_serial_buffers 0",
-            "[[ -z $(opkg list-installed | grep -q 'omega2-script') ]] && [[ RESULT=='Installed' ]] || export RESULT1='Not found'",
-            "[[ $RESULT=='Not found' ]] && [[ -z $(opkg install omega2-script | grep -q 'Configuring omega2-script') ]] && RESULT='Installed'",
+            "opkg update && export RESULT='Update completed'",
             "wait_and_reset_serial_buffers 0",
             "echo $RESULT && unset RESULT"
         ],
-        "expected_response": "Installed",
-        "timeout": 60,
+        "expected_response": "Update completed",
+        "timeout": 120,
+        "if_failed": "Check your Internet connection"
+    },
+    {
+        "test_name": "opkg_install_dependencies_kmod_pwm",
+        "commands": [
+            "[[ -z $(opkg list-installed | grep -q 'kmod-pwm-mediatek-ramips') ]] && export RESULT='The package has been installed' || export RESULT='Not found'",
+            "[[ $RESULT=='Not found' ]] && [[ -z $(opkg install kmod-pwm-mediatek-ramips | grep -q 'Configuring kmod-pwm-mediatek-ramips') ]] && RESULT='The package has been installed'",
+            "wait_and_reset_serial_buffers 0",
+            "echo $RESULT && unset RESULT"
+        ],
+        "expected_response": "The package has been installed",
+        "timeout": 30,
+        "if_failed": "https://documentation.onioniot.com/hardware-interfaces/pwm"
+    },
+    {
+        "test_name": "opkg_install_dependencies_omega2_script",
+        "commands": [
+            "[[ -z $(opkg list-installed | grep -q 'omega2-script') ]] && export RESULT='The package has been installed' || export RESULT='Not found'",
+            "[[ $RESULT2=='Not found' ]] && [[ -z $(opkg install omega2-script | grep -q 'Configuring omega2-script') ]] && RESULT='The package has been installed'",
+            "wait_and_reset_serial_buffers 0",
+            "echo $RESULT && unset RESULT"
+        ],
+        "expected_response": "The package has been installed",
+        "timeout": 30,
         "if_failed": "https://documentation.onioniot.com/hardware-interfaces/pwm"
     },
     {
@@ -31,7 +49,7 @@
         "test_name": "generate_pwm_signal",
         "commands": [
             "onion pwm 0 50 123456",
-            "wait_and_reset_serial_buffers 5",
+            "wait_and_reset_serial_buffers 0",
             "echo $?"
         ],
         "expected_response": "0",
