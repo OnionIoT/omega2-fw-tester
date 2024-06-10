@@ -1,38 +1,27 @@
 [
     {
-        "test_name": "opkg_update",
-        "commands": [
-            "opkg update && export RESULT='Update_completed'",
-            "wait_and_reset_serial_buffers 0",
-            "echo $RESULT && unset RESULT"
-        ],
-        "expected_response": "Update_completed",
-        "timeout": 120,
-        "if_failed": "Check your Internet connection"
-    },
-    {
         "test_name": "opkg_install_dependencies_kmod_pwm",
         "commands": [
             "[[ -z $(opkg list-installed | grep -q 'kmod-pwm-mediatek-ramips') ]] && export RESULT='The_package_has_been_installed' || export RESULT='The_package_is_not_found'",
-            "[[ $RESULT=='The_package_is_not_found' ]] && [[ -z $(opkg install kmod-pwm-mediatek-ramips | grep -q 'Configuring kmod-pwm-mediatek-ramips') ]] && RESULT='The_package_has_been_installed'",
+            "[[ $RESULT=='The_package_is_not_found' ]] && [[ -z $(while ! opkg install kmod-pwm-mediatek-ramips; do echo 'Retrying...'; done | grep -q 'Configuring kmod-pwm-mediatek-ramips') ]] && RESULT='The_package_has_been_installed'",
             "wait_and_reset_serial_buffers 0",
             "echo $RESULT && unset RESULT"
         ],
         "expected_response": "The_package_has_been_installed",
         "timeout": 30,
-        "if_failed": "https://documentation.onioniot.com/hardware-interfaces/pwm"
+        "if_failed": "Run 'opkg update' and visit https://documentation.onioniot.com/hardware-interfaces/pwm"
     },
     {
         "test_name": "opkg_install_dependencies_omega2_script",
         "commands": [
             "[[ -z $(opkg list-installed | grep -q 'omega2-script') ]] && export RESULT='The_package_has_been_installed' || export RESULT='The_package_is_not_found'",
-            "[[ $RESULT2=='The_package_is_not_found' ]] && [[ -z $(opkg install omega2-script | grep -q 'Configuring omega2-script') ]] && RESULT='The_package_has_been_installed'",
+            "[[ $RESULT2=='The_package_is_not_found' ]] && [[ -z $(while ! opkg install omega2-script; do echo 'Retrying...'; done | grep -q 'Configuring omega2-script') ]] && RESULT='The_package_has_been_installed'",
             "wait_and_reset_serial_buffers 0",
             "echo $RESULT && unset RESULT"
         ],
         "expected_response": "The_package_has_been_installed",
         "timeout": 30,
-        "if_failed": "https://documentation.onioniot.com/hardware-interfaces/pwm"
+        "if_failed": "Run 'opkg update' and visit https://documentation.onioniot.com/hardware-interfaces/pwm"
     },
     {
         "test_name": "adjust_pin_multiplexing",
