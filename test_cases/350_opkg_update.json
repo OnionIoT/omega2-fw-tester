@@ -1,0 +1,13 @@
+[
+    {
+        "test_name": "opkg_update",
+        "commands": [
+            "while ! opkg update; do echo 'Retrying...'; done && export RESULT='Update_completed'",
+            "wait_and_reset_serial_buffers 0",
+            "echo $RESULT && unset RESULT"
+        ],
+        "expected_response": "Update_completed",
+        "timeout": 200,
+        "if_failed": "Check your Internet connection"
+    }
+]
