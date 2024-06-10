@@ -26,7 +26,9 @@ def pytest_generate_tests(metafunc):
     print(metafunc.fixturenames)
     if "test_case" in metafunc.fixturenames:
         if metafunc.config.getoption("--run-all"):
-            json_files = [os.path.join('test_cases', file) for file in os.listdir('test_cases') if file.endswith('.json')]    
+            test_case_dir = os.listdir('test_cases')
+            test_case_dir.sort()
+            json_files = [os.path.join('test_cases', file) for file in test_case_dir if file.endswith('.json')]    
         elif metafunc.config.getoption("--json-config"):
             json_files = metafunc.config.getoption("--json-config")
         
