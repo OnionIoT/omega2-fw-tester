@@ -7,6 +7,8 @@ def pytest_addoption(parser):
                      help="Path to the JSON file(s) containing test cases.")
     parser.addoption("--run-all", action="store_true", default=False, 
                      help="Run all tests from JSON files in test_cases directory.")
+    parser.addoption("--except", nargs='+', action="store",
+                     help="Path to the JSON file(s) with test cases which won't be run.")
 
 def pytest_configure(config):
     json_config = config.getoption("--json-config")

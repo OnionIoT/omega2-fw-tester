@@ -1,6 +1,7 @@
 import pytest
 import json
 import os
+import pathlib
 from serial_communication import DeviceCommunicator
 
 def load_test_cases(json_files):
@@ -28,12 +29,18 @@ def pytest_generate_tests(metafunc):
         if metafunc.config.getoption("--run-all"):
             test_case_dir = os.listdir('test_cases')
             test_case_dir.sort()
-            json_files = [os.path.join('test_cases', file) for file in test_case_dir if file.endswith('.json')]    
+            tc_except_list = []
+            if metafunc.config.getoption("--except"):
+                # Convert path to OS format
+                tc_except_list = [os.path.normpath(tc) for tc in metafunc.config.getoption("--except")]
+
+            all_json_files = [os.path.join('test_cases', file) for file in test_case_dir if file.endswith('.json')]
+            json_files_to_load = [file for file in all_json_files if file not in tc_except_list]
         elif metafunc.config.getoption("--json-config"):
-            json_files = metafunc.config.getoption("--json-config")
+            json_files_to_load = metafunc.config.getoption("--json-config")
         
         test_cases_list = []
-        for json_config in json_files:
+        for json_config in json_files_to_load:
             test_cases = load_test_cases(json_config)  # Load test cases from the JSON file
             test_cases_list += test_cases
         # Pretty print to have test case name with its number and file name at the beginning. 
