@@ -10,6 +10,6 @@
         ],
         "expected_response": "IP found!",
         "timeout": 5,
-        "if_failed": "Check if the device connected to Omega supports can be DHCP server, otherwise change Omega network config to use static IP"
+        "if_failed": "Check if the device connected to Omega can be DHCP server, otherwise change Omega network config to use static IP"
     }
 ]
