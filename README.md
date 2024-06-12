@@ -86,15 +86,35 @@ Also prepare your system environment:
 
 ## Running the Tests
 
+### Running Tests
 To run the tests, use the following command, specifying the JSON configuration file as needed:
 
 ```
 pytest -v test_device.py --json-config <JSON TEST FILE1> <JSON TEST FILE2> ...
 ```
 
+### Running All Tests
 Or run all tests from 'test_cases' directory:
 ```
 pytest -v test_device.py --run-all
+```
+
+### Running All Tests with Exceptions
+Or to to run all tests from 'test_cases' directory **except** for specified test files:
+```
+pytest -v test_device.py --run-all --except <JSON TEST FILE1> <JSON TEST FILE2> ...
+```
+
+## Testing Omega Firmware
+
+Running all tests: 
+```
+pytest -v test_device.py --run-all
+```
+
+Running all tests except for NodeJS test (saves ~5 minutes): 
+```
+pytest -v test_device.py --run-all --except test_cases/550_node.json
 ```
 
 ## Sample Output
